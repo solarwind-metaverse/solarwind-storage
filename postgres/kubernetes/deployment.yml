@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      name: postgres
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - name: postgres
+        image: vhalme/slw-postgres:x86_1
+        ports:
+        - containerPort: 5432
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql
+        args:
+          - -c 
+          - ssl=on
+          - -c 
+          - ssl_cert_file=/etc/postgresql/ssl/server.crt
+          - -c
+          - ssl_key_file=/etc/postgresql/ssl/server.key
+        env:
+          - name: PGDATA
+            value: /var/lib/postgresql/pgdata
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+
+

@@ -1,0 +1,4 @@
+# ignore resources
+.env
+/postgres/assets/certs
+.DS_Store
